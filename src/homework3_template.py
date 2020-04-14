@@ -55,7 +55,10 @@ def fPC(W, images, labels):
 
 def fCE(W, images, labels):
     '''Cross-entropy loss.'''
-    # TODO
+    n = len(images)
+    predictions = get_predictions(W, images)
+    return -np.sum(labels * np.log(predictions)) / n
+
 
 if __name__ == "__main__":
     # Load data
@@ -73,7 +76,7 @@ if __name__ == "__main__":
 
     # do regression (time it)
     start = datetime.datetime.now()
-    W = softmaxRegression(trainingImages, trainingLabels, testingImages, testingLabels, epsilon=0.1, batchSize=100, num_epochs=1000)
+    W = softmaxRegression(trainingImages, trainingLabels, testingImages, testingLabels, epsilon=0.1, batchSize=100, num_epochs=1024)
     stop = datetime.datetime.now()
     print('Time to train: %.2f seconds' % (stop - start).total_seconds())
 
