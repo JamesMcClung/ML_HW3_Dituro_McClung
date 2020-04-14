@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import datetime
 
 def shuffle_pairwise(a, b):
     '''Returns a pair of shuffled copies of the given arrays, shuffled in the same way.'''
@@ -35,11 +36,13 @@ def train_epoch_SGD(W, trainingImages, trainingLabels, epsilon, batchSize):
 # Given training and testing data, learning rate epsilon, and a specified batch size,
 # conduct stochastic gradient descent (SGD) to optimize the weight matrix W (785x10).
 # Then return W.
-def softmaxRegression (trainingImages, trainingLabels, testingImages, testingLabels, epsilon = None, batchSize = None):
+def softmaxRegression (trainingImages, trainingLabels, testingImages, testingLabels, epsilon = None, batchSize = None, num_epochs=1):
     # trainingImages: 5000x785
     # trainingLabels: 5000x10
     W = np.random.normal(size=(785, 10)) # initialize weights to random numbers
-    W = train_epoch_SGD(W, trainingImages, trainingLabels, epsilon or .1, batchSize or 100)
+
+    for e in range(num_epochs):
+        W = train_epoch_SGD(W, trainingImages, trainingLabels, epsilon or .1, batchSize or 100)
     return W
 
 def appendOnes (images):
@@ -47,7 +50,8 @@ def appendOnes (images):
 
 def fPC(W, images, labels):
     '''Percent correct.'''
-    # TODO
+    predictions = get_predictions(W, images)
+    return np.mean(np.argmax(predictions, axis=1) == np.argmax(labels, axis=1))
 
 def fCE(W, images, labels):
     '''Cross-entropy loss.'''
@@ -67,11 +71,15 @@ if __name__ == "__main__":
     trainingImages = appendOnes(trainingImages)
     testingImages = appendOnes(testingImages)
 
-    # do regression
-    W = softmaxRegression(trainingImages, trainingLabels, testingImages, testingLabels, epsilon=0.1, batchSize=100)
+    # do regression (time it)
+    start = datetime.datetime.now()
+    W = softmaxRegression(trainingImages, trainingLabels, testingImages, testingLabels, epsilon=0.1, batchSize=100, num_epochs=1000)
+    stop = datetime.datetime.now()
+    print('Time to train: %.2f seconds' % (stop - start).total_seconds())
 
     # print fCE and fPC
-    # TODO
-    
+    print(f"Test accuracy (PC): {fPC(W, testingImages, testingLabels)}")
+    print(f"Test loss (CE): {fCE(W, testingImages, testingLabels)}")
+
     # Visualize the vectors
     # TODO
