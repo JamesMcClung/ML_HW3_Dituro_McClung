@@ -7,6 +7,9 @@ import matplotlib.pyplot as plt
 def softmaxRegression (trainingImages, trainingLabels, testingImages, testingLabels, epsilon = None, batchSize = None):
     pass
 
+def appendOnes (images):
+    return np.vstack((images.T, np.ones(images.shape[0]))).T
+
 if __name__ == "__main__":
     # Load data
     trainingImages = np.load("small_mnist_train_images.npy")
@@ -16,6 +19,7 @@ if __name__ == "__main__":
 
     # Append a constant 1 term to each example to correspond to the bias terms
     # ...
+
 
     W = softmaxRegression(trainingImages, trainingLabels, testingImages, testingLabels, epsilon=0.1, batchSize=100)
     
