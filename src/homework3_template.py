@@ -22,14 +22,14 @@ def scale(imgs, lbls):
 def translate(imgs):
     zRow = np.zeros((1, 28)) 
     imgsPrime = formatImg(imgs = imgs)
-
     trimmedimgs = imgsPrime[0:, 0:-2]
-    print(trimmedimgs.shape)
     return [np.vstack((np.repeat(zRow, 2, axis = 0), x)) for x in trimmedimgs[0:]]
 
 
-def applyNoise(imgs, lbls):
-    pass
+def applyNoise(imgs):
+    imgsPrime = formatImg(imgs = imgs)
+    noise = np.random.normal(loc=.5, scale=.01, size=imgsPrime.shape)
+    return imgsPrime + noise
 
 def formatImg(imgs):
     return np.array([np.resize(x, (28,28)) for x in imgs[0:]])
@@ -44,13 +44,15 @@ if __name__ == "__main__":
     # Append a constant 1 term to each example to correspond to the bias terms
     # ...
     trans = translate(trainingImages)
+    noise = applyNoise(trainingImages)
 
-    for x in range(1,30):
+    for x in range(1,5):
         showimg = formatImg(imgs = trainingImages)
 
         plt.imshow(showimg[x]), plt.show()
 
         plt.imshow(trans[x]), plt.show()
+        plt.imshow(noise[x]), plt.show()
 
     W = softmaxRegression(trainingImages, trainingLabels, testingImages, testingLabels, epsilon=0.1, batchSize=100)
     
