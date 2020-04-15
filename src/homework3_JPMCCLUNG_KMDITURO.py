@@ -69,14 +69,14 @@ def rotate(imgs):
 
 def scale(imgs):
     imgsPrime = formatImg(imgs = imgs)
-    upscaled = np.array([sk.rescale(image = x, scale = 2) for x in imgsPrime[0:]])
-    cropFactor = rand.randrange(0, 3)
+    upscaled = np.array([sk.rescale(image = x, scale = rand.randrange(3,5)) for x in imgsPrime[0:]])
+    cropFactor = rand.randrange(4, 7)
     return flattenImg(np.array([sk.resize(x[cropFactor:-cropFactor, cropFactor:-cropFactor], (28,28)) for x in upscaled[0:]]))
 
 def translate(imgs):
     zRow = np.zeros((1, 28)) 
     imgsPrime = formatImg(imgs = imgs)
-    transFactor = rand.randrange(0, 7)
+    transFactor = rand.randrange(1, 7)
     trimmedimgs = imgsPrime[0:, 0: (-transFactor) ]
     horiz = np.array([np.vstack((np.repeat(zRow, transFactor, axis = 0), x)) for x in trimmedimgs[0:]])
 
@@ -148,8 +148,13 @@ if __name__ == "__main__":
     # more = appendOnes(translate(rotate(scale(trainingImages))))
 
     # showMore = formatImg(more)
-    # for x in range(1,10):
+    for x in range(1,10):
         # plt.imshow(showMore[x]), plt.show()
+        plt.imshow(formatImg(trans)[x]), plt.show()
+        plt.imshow(formatImg(noise)[x]), plt.show()
+        plt.imshow(formatImg(rot)[x]), plt.show()
+        plt.imshow(formatImg(scl)[x]), plt.show()      
+        plt.imshow(formatImg(trainingImages)[x]), plt.show()
 
     # bigData = np.vstack((trainingImages, more))
     # bigLabels = np.repeat(trainingLabels, repeats = 2, axis = 0)
