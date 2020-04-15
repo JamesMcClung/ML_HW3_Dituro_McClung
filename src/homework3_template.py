@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import skimage.transform as sk
 import datetime
 
 def shuffle_pairwise(a, b):
@@ -59,6 +60,31 @@ def fCE(W, images, labels):
     predictions = get_predictions(W, images)
     return -np.sum(labels * np.log(predictions)) / n
 
+
+def rotate(imgs):
+    imgsPrime = formatImg(imgs = imgs)
+    return np.array([sk.rotate(image = x, angle = 15) for x in imgsPrime[0:]])
+    
+
+def scale(imgs):
+    imgsPrime = formatImg(imgs = imgs)
+    upscaled = np.array([sk.rescale(image = x, scale = 2) for x in imgsPrime[0:]])
+    return np.array([sk.resize(x[4:-4, 4:-4], (28,28)) for x in upscaled[0:]])
+
+def translate(imgs):
+    zRow = np.zeros((1, 28)) 
+    imgsPrime = formatImg(imgs = imgs)
+    trimmedimgs = imgsPrime[0:, 0:-2]
+    return [np.vstack((np.repeat(zRow, 2, axis = 0), x)) for x in trimmedimgs[0:]]
+
+
+def applyNoise(imgs):
+    imgsPrime = formatImg(imgs = imgs)
+    noise = np.random.normal(loc=.5, scale=.01, size=imgsPrime.shape)
+    return imgsPrime + noise
+
+def formatImg(imgs):
+    return np.array([np.resize(x, (28,28)) for x in imgs[0:]])
 
 if __name__ == "__main__":
     # Load data
