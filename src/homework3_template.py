@@ -18,8 +18,10 @@ def rotate(imgs):
     return np.array([sk.rotate(image = x, angle = 15) for x in imgsPrime[0:]])
     
 
-def scale(imgs, lbls):
-    pass
+def scale(imgs):
+    imgsPrime = formatImg(imgs = imgs)
+    upscaled = np.array([sk.rescale(image = x, scale = 2) for x in imgsPrime[0:]])
+    return np.array([sk.resize(x[4:-4, 4:-4], (28,28)) for x in upscaled[0:]])
 
 def translate(imgs):
     zRow = np.zeros((1, 28)) 
@@ -48,6 +50,7 @@ if __name__ == "__main__":
     trans = translate(trainingImages)
     noise = applyNoise(trainingImages)
     rot = rotate(trainingImages)
+    scl = scale(trainingImages)
 
     for x in range(1,5):
         showimg = formatImg(imgs = trainingImages)
@@ -57,6 +60,7 @@ if __name__ == "__main__":
         plt.imshow(trans[x]), plt.show()
         plt.imshow(noise[x]), plt.show()
         plt.imshow(rot[x]), plt.show()
+        plt.imshow(scl[x]), plt.show()
 
     W = softmaxRegression(trainingImages, trainingLabels, testingImages, testingLabels, epsilon=0.1, batchSize=100)
     
