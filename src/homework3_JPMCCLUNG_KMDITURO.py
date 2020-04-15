@@ -64,7 +64,7 @@ def fCE(W, images, labels):
 
 def rotate(imgs):
     imgsPrime = formatImg(imgs = imgs)
-    return flattenImg((np.array([sk.rotate(image = x, angle = (rand.randrange(-30, 30))) for x in imgsPrime[0:]])))
+    return flattenImg((np.array([sk.rotate(image = x, angle = (rand.randrange(-15, 15))) for x in imgsPrime[0:]])))
     
 
 def scale(imgs):

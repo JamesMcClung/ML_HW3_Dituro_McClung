@@ -1,0 +1,7 @@
+# Ignore files related to compiling LaTeX
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
