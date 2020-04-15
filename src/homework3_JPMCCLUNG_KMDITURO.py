@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import skimage.transform as sk
 import datetime
+import random as rand
 
 def shuffle_pairwise(a, b):
     '''Returns a pair of shuffled copies of the given arrays, shuffled in the same way.'''
@@ -63,19 +64,25 @@ def fCE(W, images, labels):
 
 def rotate(imgs):
     imgsPrime = formatImg(imgs = imgs)
-    return flattenImg((np.array([sk.rotate(image = x, angle = 15) for x in imgsPrime[0:]])))
+    return flattenImg((np.array([sk.rotate(image = x, angle = (rand.randrange(-30, 30))) for x in imgsPrime[0:]])))
     
 
 def scale(imgs):
     imgsPrime = formatImg(imgs = imgs)
     upscaled = np.array([sk.rescale(image = x, scale = 2) for x in imgsPrime[0:]])
-    return flattenImg(np.array([sk.resize(x[4:-4, 4:-4], (28,28)) for x in upscaled[0:]]))
+    cropFactor = rand.randrange(0, 5)
+    return flattenImg(np.array([sk.resize(x[cropFactor:-cropFactor, cropFactor:-cropFactor], (28,28)) for x in upscaled[0:]]))
 
 def translate(imgs):
     zRow = np.zeros((1, 28)) 
     imgsPrime = formatImg(imgs = imgs)
-    trimmedimgs = imgsPrime[0:, 0:-2]
-    return flattenImg(np.array([np.vstack((np.repeat(zRow, 2, axis = 0), x)) for x in trimmedimgs[0:]]))
+    transFactor = rand.randrange(0, 7)
+    trimmedimgs = imgsPrime[0:, 0: (-transFactor) ]
+    horiz = np.array([np.vstack((np.repeat(zRow, transFactor, axis = 0), x)) for x in trimmedimgs[0:]])
+
+    transFactor = rand.randrange(0,7)
+    vert = np.array([np.vstack((np.repeat(zRow, transFactor, axis = 0), x.T[0:-transFactor])).T for x in horiz[0:]])
+    return flattenImg(vert)
 
 
 def applyNoise(imgs):
