@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import skimage.transform as sk
 # Given training and testing data, learning rate epsilon, and a specified batch size,
 # conduct stochastic gradient descent (SGD) to optimize the weight matrix W (785x10).
 # Then return W.
@@ -13,8 +13,10 @@ def appendOnes (images):
 def augData(imgs, lbls):
     pass
 
-def rotate(imgs, lbls):
-    pass
+def rotate(imgs):
+    imgsPrime = formatImg(imgs = imgs)
+    return np.array([sk.rotate(image = x, angle = 15) for x in imgsPrime[0:]])
+    
 
 def scale(imgs, lbls):
     pass
@@ -45,6 +47,7 @@ if __name__ == "__main__":
     # ...
     trans = translate(trainingImages)
     noise = applyNoise(trainingImages)
+    rot = rotate(trainingImages)
 
     for x in range(1,5):
         showimg = formatImg(imgs = trainingImages)
@@ -53,6 +56,7 @@ if __name__ == "__main__":
 
         plt.imshow(trans[x]), plt.show()
         plt.imshow(noise[x]), plt.show()
+        plt.imshow(rot[x]), plt.show()
 
     W = softmaxRegression(trainingImages, trainingLabels, testingImages, testingLabels, epsilon=0.1, batchSize=100)
     
