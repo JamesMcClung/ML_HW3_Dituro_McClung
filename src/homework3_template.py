@@ -10,9 +10,6 @@ def softmaxRegression (trainingImages, trainingLabels, testingImages, testingLab
 def appendOnes (images):
     return np.vstack((images.T, np.ones(images.shape[0]))).T
 
-def augData(imgs, lbls):
-    pass
-
 def rotate(imgs):
     imgsPrime = formatImg(imgs = imgs)
     return np.array([sk.rotate(image = x, angle = 15) for x in imgsPrime[0:]])
