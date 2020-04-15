@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import skimage.transform as sk
 import datetime
 
 def shuffle_pairwise(a, b):
@@ -60,35 +59,6 @@ def fCE(W, images, labels):
     predictions = get_predictions(W, images)
     return -np.sum(labels * np.log(predictions)) / n
 
-
-def rotate(imgs):
-    imgsPrime = formatImg(imgs = imgs)
-    return flattenImg((np.array([sk.rotate(image = x, angle = 15) for x in imgsPrime[0:]])))
-    
-
-def scale(imgs):
-    imgsPrime = formatImg(imgs = imgs)
-    upscaled = np.array([sk.rescale(image = x, scale = 2) for x in imgsPrime[0:]])
-    return flattenImg(np.array([sk.resize(x[4:-4, 4:-4], (28,28)) for x in upscaled[0:]]))
-
-def translate(imgs):
-    zRow = np.zeros((1, 28)) 
-    imgsPrime = formatImg(imgs = imgs)
-    trimmedimgs = imgsPrime[0:, 0:-2]
-    return flattenImg(np.array([np.vstack((np.repeat(zRow, 2, axis = 0), x)) for x in trimmedimgs[0:]]))
-
-
-def applyNoise(imgs):
-    imgsPrime = formatImg(imgs = imgs)
-    noise = np.random.normal(loc=.5, scale=.01, size=imgsPrime.shape)
-    return flattenImg(imgsPrime + noise)
-
-def formatImg(imgs):
-    return np.array([np.resize(x, (28,28)) for x in imgs[0:]])
-
-def flattenImg(imgs):
-    return np.array([x.flatten() for x in imgs[0:]])
-
 def display_weights(W):
     '''
     Displays the weights as a grayscale image.
@@ -126,40 +96,5 @@ if __name__ == "__main__":
     print(f"Test accuracy (PC): {fPC(W, testingImages, testingLabels)}")
     print(f"Test loss (CE): {fCE(W, testingImages, testingLabels)}")
 
-    display_weights(W)
-
-
-    # Augment data:
-    trans = appendOnes( translate(trainingImages))
-    noise = appendOnes( applyNoise(trainingImages))
-    rot = appendOnes( rotate(trainingImages))
-    scl = appendOnes( scale(trainingImages))
-
-    bigData = np.vstack((trainingImages, trans, noise, rot, scl))
-    bigLabels = np.repeat(trainingLabels, repeats = 5, axis = 0)
-    
-    # more = appendOnes(translate(rotate(scale(trainingImages))))
-
-    # showMore = formatImg(more)
-    # for x in range(1,10):
-        # plt.imshow(showMore[x]), plt.show()
-
-    # bigData = np.vstack((trainingImages, more))
-    # bigLabels = np.repeat(trainingLabels, repeats = 2, axis = 0)
-    
-
-    # do regression again... but BIGGER (time it)
-    print('='*20)
-    print('Augmented tests start here!')
-    print('='*20)
-    start = datetime.datetime.now()
-    W = softmaxRegression(bigData, bigLabels, testingImages, testingLabels, epsilon=0.1, batchSize=100, num_epochs=1024)
-    stop = datetime.datetime.now()
-    print('Time to train: %.2f seconds' % (stop - start).total_seconds())
-
-    # print fCE and fPC
-    print(f"Test accuracy (PC): {fPC(W, testingImages, testingLabels)}")
-    print(f"Test loss (CE): {fCE(W, testingImages, testingLabels)}")
-    
     # Visualize the vectors
     display_weights(W)
