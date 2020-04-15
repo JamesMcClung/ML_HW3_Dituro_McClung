@@ -70,7 +70,7 @@ def rotate(imgs):
 def scale(imgs):
     imgsPrime = formatImg(imgs = imgs)
     upscaled = np.array([sk.rescale(image = x, scale = 2) for x in imgsPrime[0:]])
-    cropFactor = rand.randrange(0, 5)
+    cropFactor = rand.randrange(0, 3)
     return flattenImg(np.array([sk.resize(x[cropFactor:-cropFactor, cropFactor:-cropFactor], (28,28)) for x in upscaled[0:]]))
 
 def translate(imgs):
