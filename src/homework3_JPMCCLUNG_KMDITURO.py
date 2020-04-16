@@ -45,6 +45,8 @@ def softmaxRegression (trainingImages, trainingLabels, testingImages, testingLab
 
     for e in range(num_epochs):
         W = train_epoch_SGD(W, trainingImages, trainingLabels, epsilon or .1, batchSize or 100)
+        if (num_epochs - e) <= 20:
+            print(f"{num_epochs-e}: fPC = {fPC(W, testingImages, testingLabels)}")
     return W
 
 def appendOnes (images):
